@@ -1,0 +1,40 @@
+name: fuse_connect_example
+description: Demonstrates how to use the fuse_connect plugin.
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+environment:
+  sdk: '>=2.18.6 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  fuse_connect:
+    path: ../
+  cupertino_icons: ^1.0.2
+  font_awesome_flutter: ^10.3.0
+  http: ^0.13.5
+  intercom_flutter: ^7.6.1
+  phone_number: ^1.0.0
+  pin_code_fields: ^7.4.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/features/welcome/card.png
+    - assets/images/features/welcome/logo.png
+    - assets/images/features/auth/us_flag.png
+    - assets/images/features/home/virtual_card.png
+    - assets/images/features/home/takeout_icon.png
+    - assets/images/features/home/restaurant_icon.png
+    - assets/images/features/home/profile_picture.png
+    - assets/images/features/home/cashback_graph.png

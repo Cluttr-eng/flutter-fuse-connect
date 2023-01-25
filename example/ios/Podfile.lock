@@ -1,0 +1,53 @@
+PODS:
+  - Flutter (1.0.0)
+  - fuse_connect (0.0.1):
+    - Flutter
+    - FuseConnect (= 1.0.0)
+  - FuseConnect (1.0.0):
+    - Plaid (~> 3.1.1)
+  - Intercom (14.0.6)
+  - intercom_flutter (7.5.0):
+    - Flutter
+    - Intercom (~> 14.0.6)
+  - phone_number (1.0.0):
+    - Flutter
+    - PhoneNumberKit/PhoneNumberKitCore (= 3.3.4)
+  - PhoneNumberKit/PhoneNumberKitCore (3.3.4)
+  - Plaid (3.1.1)
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - fuse_connect (from `.symlinks/plugins/fuse_connect/ios`)
+  - intercom_flutter (from `.symlinks/plugins/intercom_flutter/ios`)
+  - phone_number (from `.symlinks/plugins/phone_number/ios`)
+
+SPEC REPOS:
+  trunk:
+    - FuseConnect
+    - Intercom
+    - PhoneNumberKit
+    - Plaid
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  fuse_connect:
+    :path: ".symlinks/plugins/fuse_connect/ios"
+  intercom_flutter:
+    :path: ".symlinks/plugins/intercom_flutter/ios"
+  phone_number:
+    :path: ".symlinks/plugins/phone_number/ios"
+
+SPEC CHECKSUMS:
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  fuse_connect: e593ad402b6d6a5695e960eb23e0b928b58b58e8
+  FuseConnect: e8cfa2a5c88759410531ccfe885c7ea091e3cc84
+  Intercom: 443c886cc5a6eb276a5c82f1dd5ba5031cc27151
+  intercom_flutter: 4bd020d6049c615b78b873cd0176ab62b0bdace9
+  phone_number: ad6f917e4fd2e507a198b93dca5eadcb463ec8c2
+  PhoneNumberKit: 441e8b26ec88d598e3591de9061eff18f5dd12e8
+  Plaid: d07ce91ce8d52f01fc2c5882e2335f4a5e718462
+
+PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3
+
+COCOAPODS: 1.11.3
