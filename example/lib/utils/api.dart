@@ -44,9 +44,7 @@ class API {
       'phone_number': phone,
       'template_id': template,
       'supported_financial_institution_aggregators': ["PLAID", "TELLER", "MX"],
-      'plaid': {
-        'products': ["identity"]
-      },
+      'products': ["identity"],
     };
 
     final http.Response response = await API.post(

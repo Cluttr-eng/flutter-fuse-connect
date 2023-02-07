@@ -38,7 +38,6 @@ class FuseConnect {
           Map<String, dynamic> arguments =
           Map<String, dynamic>.from(call.arguments);
           String institutionId = arguments['institution_id'];
-
           onInstitutionSelected(institutionId, (linkToken) {
             platform.invokeMethod('institutionSelectCallBack', [linkToken]);
           });
