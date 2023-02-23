@@ -151,6 +151,8 @@ class _HomePageState extends State<HomePage> {
                                     clientSecret: clientSecret,
                                   );
 
+                                  print('Link token $linkToken');
+
                                   callBack(linkToken);
                                 },
                               );
