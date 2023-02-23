@@ -55,7 +55,6 @@ class FuseConnect {
   handleOnSuccessMethod(MethodCall call) {
     Map<String, dynamic> arguments = Map<String, dynamic>.from(call.arguments);
     String publicToken = arguments['public_token'];
-
     onSuccess(publicToken);
   }
 
@@ -87,14 +86,10 @@ class FuseConnect {
   handleEvent(String eventName, Map<String, dynamic> meta) {
     switch (eventName) {
       case "onSuccess":
-        {
-          // onSuccess();
-        }
         break;
       case "onExit":
-        {
-          onExit("something went wrong");
-        }
+        onExit("something went wrong");
+        break;
     }
   }
 

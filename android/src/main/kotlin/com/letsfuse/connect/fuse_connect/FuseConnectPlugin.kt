@@ -40,6 +40,7 @@ class FuseConnectPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
     when (call.method) {
       "open" -> open(args[0] as String)
+      "close" -> close()
       "institutionSelectCallBack" -> {
         if (institutionSelectedCallback != null) {
           institutionSelectedCallback!!(args[0] as String)
@@ -66,6 +67,10 @@ class FuseConnectPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     FuseConnectActivity.onSuccess = { publicToken ->
       channel.invokeMethod("onSuccess", mapOf("public_token" to publicToken))
     }
+  }
+
+  private fun close() {
+    activity.finishActivity(REQUEST_CODE)
   }
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
