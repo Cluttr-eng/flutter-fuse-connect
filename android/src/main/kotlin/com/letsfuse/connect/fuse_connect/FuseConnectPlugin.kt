@@ -1,49 +1,44 @@
 package com.letsfuse.connect.fuse_connect
 
-import androidx.annotation.NonNull
-
 import android.app.Activity
 import android.content.Intent
-import android.content.Context
+import androidx.annotation.NonNull
+import androidx.core.app.ActivityCompat.startActivityForResult
+import com.letsfuse.connect.FuseConnectActivity
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import io.flutter.plugin.common.PluginRegistry.Registrar
-import io.flutter.embedding.android.FlutterActivity
-import io.flutter.embedding.engine.FlutterEngine
-import com.letsfuse.connect.FuseConnectActivity
-import com.letsfuse.connect.FuseConnectActivity.Companion.EVENT_EXTRA
-import com.letsfuse.connect.InstitutionSelect
 
 /** FuseConnectPlugin */
-class FuseConnectPlugin: FlutterPlugin, MethodCallHandler {
+class FuseConnectPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   /// The MethodChannel that will the communication between Flutter and native Android
   ///
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
   /// when the Flutter Engine is detached from the Activity
-  private lateinit var channel : MethodChannel
   companion object {
     const val CHANNEL = "fuse_connect"
     const val REQUEST_CODE = 928
-
+    var activity : Activity? = null
     var institutionSelectedCallback: ((String) -> Unit)? = null
   }
 
-  private val context: Context
-
-  constructor(context: Context) {
-    this.context = context
-  }
+  private lateinit var channel : MethodChannel
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, CHANNEL)
-    channel.setMethodCallHandler(FuseConnectPlugin(registrar.context()))
+    activity = flutterPluginBinding.applicationContext as Activity
+    channel.setMethodCallHandler(this)
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     val args = call.arguments as List<*>
+    print("got method")
+    print(call.method)
+
     when (call.method) {
       "open" -> open(args[0] as String)
       "institutionSelectCallBack" -> {
@@ -59,17 +54,36 @@ class FuseConnectPlugin: FlutterPlugin, MethodCallHandler {
   }
 
   private fun open(clientSecret: String) {
-    val intent = Intent(this, FuseConnectActivity::class.java)
-    intent.putExtra("clientSecret", clientSecret)
-    startActivityForResult(intent, REQUEST_CODE)
+    if (activity != null) {
 
-    FuseConnectActivity.onInstitutionSelected = { institution_id, callback ->
-      institutionSelectedCallback = { linkToken -> callback(linkToken) }
-      channel.invokeMethod("onInstitutionSelected", mapOf("institution_id" to institution_id))
-    }
+      val intent = Intent(activity, FuseConnectActivity::class.java)
+      intent.putExtra("clientSecret", clientSecret)
+      startActivityForResult(activity!!, intent, REQUEST_CODE, null)
 
-    FuseConnectActivity.onSuccess = { publicToken ->
-      channel.invokeMethod("onSuccess", mapOf("public_token" to publicToken))
+      FuseConnectActivity.onInstitutionSelected = { institution_id, callback ->
+        institutionSelectedCallback = { linkToken -> callback(linkToken) }
+        channel.invokeMethod("onInstitutionSelected", mapOf("institution_id" to institution_id))
+      }
+
+      FuseConnectActivity.onSuccess = { publicToken ->
+        channel.invokeMethod("onSuccess", mapOf("public_token" to publicToken))
+      }
     }
+  }
+
+  override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+    activity = binding.activity
+  }
+
+  override fun onDetachedFromActivityForConfigChanges() {
+    activity = null
+  }
+
+  override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+    activity = binding.activity
+  }
+
+  override fun onDetachedFromActivity() {
+    activity = null
   }
 }
