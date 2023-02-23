@@ -113,6 +113,8 @@ class _HomePageState extends State<HomePage> {
                                 template: "BankLinking",
                               );
 
+                              print("clientSecret: " + clientSecret);
+
                               final fuseConnect = FuseConnect(
                                 onSuccess: (publicToken) async {
                                   if (kDebugMode) {
