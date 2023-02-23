@@ -3,7 +3,6 @@ package com.letsfuse.connect.fuse_connect
 import android.app.Activity
 import android.content.Intent
 import android.util.Log
-import androidx.core.app.ActivityCompat.startActivityForResult
 import com.letsfuse.connect.FuseConnectActivity
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -57,7 +56,7 @@ class FuseConnectPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   private fun open(clientSecret: String) {
     val intent = Intent(activity, FuseConnectActivity::class.java)
     intent.putExtra("clientSecret", clientSecret)
-    startActivityForResult(activity, intent, REQUEST_CODE, null)
+    activity.startActivityForResult(intent, REQUEST_CODE)
 
     FuseConnectActivity.onInstitutionSelected = { institution_id, callback ->
       institutionSelectedCallback = { linkToken -> callback(linkToken) }
