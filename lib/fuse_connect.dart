@@ -5,10 +5,27 @@ import 'package:flutter/services.dart';
 
 typedef SuccessCallback = void Function(String publicToken);
 typedef InstitutionCallback = void Function(
-    String institutionId,
-    Function(String linkToken),
-    );
-typedef ExitCallback = void Function(String? error);
+  String institutionId,
+  Function(String linkToken),
+);
+typedef ExitCallback = void Function(
+  ConnectError? error,
+  Map<String, dynamic>? metadata,
+);
+
+class ConnectError {
+  String? errorCode;
+  String? errorType;
+  String? displayMessage;
+  String? errorMessage;
+
+  ConnectError({
+    this.errorCode,
+    this.errorType,
+    this.displayMessage,
+    this.errorMessage,
+  });
+}
 
 class FuseConnect {
   /// A function that is called when a user successfully
@@ -32,15 +49,19 @@ class FuseConnect {
     platform.setMethodCallHandler((call) async {
       switch (call.method) {
         case "onSuccess":
-          handleOnSuccessMethod(call);
+          _handleOnSuccess(call);
           break;
         case "onInstitutionSelected":
           Map<String, dynamic> arguments =
-          Map<String, dynamic>.from(call.arguments);
+              Map<String, dynamic>.from(call.arguments);
           String institutionId = arguments['institution_id'];
           onInstitutionSelected(institutionId, (linkToken) {
             platform.invokeMethod('institutionSelectCallBack', [linkToken]);
           });
+          break;
+        case "onExit":
+          _handleOnExit(call);
+
           break;
         case "close":
           platform.invokeMethod('close', []);
@@ -52,10 +73,39 @@ class FuseConnect {
     });
   }
 
-  handleOnSuccessMethod(MethodCall call) {
+  _handleOnSuccess(MethodCall call) {
     Map<String, dynamic> arguments = Map<String, dynamic>.from(call.arguments);
     String publicToken = arguments['public_token'];
     onSuccess(publicToken);
+  }
+
+  _handleOnExit(MethodCall call) {
+    ConnectError? connectErrorArg;
+    Map<String, dynamic>? metadataArg;
+
+    if (kDebugMode) {
+      print("_handleOnExit");
+      print(call.arguments);
+    }
+
+    Map<String, dynamic> arguments = Map<String, dynamic>.from(call.arguments);
+
+    if (arguments['err']) {
+      Map<String, dynamic> errorArguments =
+          Map<String, dynamic>.from(arguments['err']);
+      String errorCode = errorArguments["error_code"];
+      String errorType = errorArguments["error_type"];
+      String displayMessage = errorArguments["display_message"];
+      String errorMessage = errorArguments["error_message"];
+      connectErrorArg = ConnectError(
+        errorCode: errorCode,
+        displayMessage: displayMessage,
+        errorType: errorType,
+        errorMessage: errorMessage,
+      );
+    }
+
+    onExit(connectErrorArg, metadataArg);
   }
 
   void _handleEventMethod(MethodCall call) {
@@ -65,7 +115,7 @@ class FuseConnect {
 
     try {
       Map<String, dynamic> arguments =
-      Map<String, dynamic>.from(call.arguments);
+          Map<String, dynamic>.from(call.arguments);
       String eventName = arguments['eventName'];
 
       Map<String, dynamic> meta = Map<String, dynamic>.from(arguments['meta']);
@@ -74,22 +124,10 @@ class FuseConnect {
         print('event name $eventName');
         print('meta $meta');
       }
-
-      handleEvent(eventName, meta);
     } catch (e) {
       if (kDebugMode) {
         print('Invalid arguments');
       }
-    }
-  }
-
-  handleEvent(String eventName, Map<String, dynamic> meta) {
-    switch (eventName) {
-      case "onSuccess":
-        break;
-      case "onExit":
-        onExit("something went wrong");
-        break;
     }
   }
 
