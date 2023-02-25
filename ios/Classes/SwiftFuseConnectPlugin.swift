@@ -46,10 +46,21 @@ public class SwiftFuseConnectPlugin: NSObject, FlutterPlugin {
             channel.invokeMethod("onInstitutionSelected", arguments: [
                 "institution_id": institutionSelect.institution_id,
             ])
-        } onExit: { _ in
-            channel.invokeMethod("onExit", arguments: [
-                "data": "nil",
-            ])
+        } onExit: { connectExit in
+            var arguments: [String: Any] = [:]
+
+            if let connectError = connectExit.err {
+                arguments["err"] = [
+                    "error_code": connectError.errorCode,
+                    "error_type": connectError.errorType,
+                    "display_message": connectError.displayMessage,
+                    "error_message": connectError.errorMessage,
+                ]
+            } else {
+                arguments["data"] = nil
+            }
+
+            channel.invokeMethod("onExit", arguments: arguments)
             self.close()
         }
         
