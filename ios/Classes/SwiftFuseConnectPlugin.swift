@@ -57,7 +57,7 @@ public class SwiftFuseConnectPlugin: NSObject, FlutterPlugin {
                     "error_message": connectError.errorMessage,
                 ]
             } else {
-                arguments["data"] = nil
+                arguments["err"] = nil
             }
 
             channel.invokeMethod("onExit", arguments: arguments)
