@@ -1,6 +1,6 @@
 name: flutter_fuse_connect
 description: Combine the best financial aggregators, increase connection success rate, reduce disconnections and expand into new markets fast - with one unified API.
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/Cluttr-eng/flutter-fuse-connect
 repository: https://github.com/Cluttr-eng/flutter-fuse-connect
 documentation: https://letsfuse.readme.io/docs/flutter
@@ -40,7 +40,7 @@ flutter:
         package: com.letsfuse.connect.fuse_connect
         pluginClass: FuseConnectPlugin
       ios:
-        pluginClass: FuseConnectPlugin
+        pluginClass: SwiftFuseConnectPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
