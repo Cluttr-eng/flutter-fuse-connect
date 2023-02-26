@@ -90,22 +90,28 @@ class FuseConnect {
 
     Map<String, dynamic> arguments = Map<String, dynamic>.from(call.arguments);
 
-    if (arguments['err']) {
-      Map<String, dynamic> errorArguments =
-          Map<String, dynamic>.from(arguments['err']);
-      String errorCode = errorArguments["error_code"];
-      String errorType = errorArguments["error_type"];
-      String displayMessage = errorArguments["display_message"];
-      String errorMessage = errorArguments["error_message"];
-      connectErrorArg = ConnectError(
-        errorCode: errorCode,
-        displayMessage: displayMessage,
-        errorType: errorType,
-        errorMessage: errorMessage,
-      );
-    }
+    try {
+      if (arguments['err'] != null) {
+        Map<String, dynamic> errorArguments =
+            Map<String, dynamic>.from(arguments['err']);
+        print(errorArguments);
+        String? errorCode = errorArguments["error_code"];
+        String? errorType = errorArguments["error_type"];
+        String? displayMessage = errorArguments["display_message"];
+        String? errorMessage = errorArguments["error_message"];
 
-    onExit(connectErrorArg, metadataArg);
+        connectErrorArg = ConnectError(
+          errorCode: errorCode,
+          displayMessage: displayMessage,
+          errorType: errorType,
+          errorMessage: errorMessage,
+        );
+      }
+
+      onExit(connectErrorArg, metadataArg);
+    } catch (e) {
+      print(e);
+    }
   }
 
   void _handleEventMethod(MethodCall call) {
