@@ -94,7 +94,9 @@ class FuseConnect {
       if (arguments['err'] != null) {
         Map<String, dynamic> errorArguments =
             Map<String, dynamic>.from(arguments['err']);
-        print(errorArguments);
+        if (kDebugMode) {
+          print(errorArguments);
+        }
         String? errorCode = errorArguments["error_code"];
         String? errorType = errorArguments["error_type"];
         String? displayMessage = errorArguments["display_message"];
@@ -110,7 +112,9 @@ class FuseConnect {
 
       onExit(connectErrorArg, metadataArg);
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
