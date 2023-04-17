@@ -15,7 +15,7 @@ Enables Fuse Connect in Flutter Apps.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'FuseConnect', '1.0.1'
+  s.dependency 'FuseConnect', '1.0.3'
   s.platform = :ios, '9.0'
 
   # Flutter.framework does not contain a i386 slice.
