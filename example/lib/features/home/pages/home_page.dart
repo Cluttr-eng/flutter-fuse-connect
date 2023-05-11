@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_fuse_connect/fuse_connect.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fuse_connect/fuse_connect.dart';
 import 'package:fuse_connect_example/constants/colors.dart';
 import 'package:fuse_connect_example/utils/api.dart';
 
@@ -108,58 +108,68 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: GestureDetector(
                             onTap: () async {
-                              final clientSecret = await API.createSession(
-                                phone: "+14088194599",
-                                template: "BankLinking",
-                              );
+                              try {
+                                if (kDebugMode) {
+                                  print('Add money tapped 3');
+                                }
+                                final clientSecret = await API.createSession(
+                                  phone: "+14088194599",
+                                  template: "BankLinking",
+                                );
 
-                              print("clientSecret: " + clientSecret);
+                                print("clientSecret: " + clientSecret);
 
-                              final fuseConnect = FuseConnect(
-                                onSuccess: (publicToken) async {
-                                  if (kDebugMode) {
-                                    print('Public token dart $publicToken');
-                                  }
+                                final fuseConnect = FuseConnect(
+                                  onSuccess: (publicToken) async {
+                                    if (kDebugMode) {
+                                      print('Public token dart $publicToken');
+                                    }
 
-                                  String accessToken = "";
-                                  try {
-                                    accessToken = await API.exchangePublicToken(
-                                        publicToken: publicToken);
-                                  } catch (e) {
-                                    print('Could not get access token');
-                                  }
+                                    String accessToken = "";
+                                    try {
+                                      accessToken =
+                                          await API.exchangePublicToken(
+                                              publicToken: publicToken);
+                                    } catch (e) {
+                                      print('Could not get access token');
+                                    }
 
-                                  print('Access token $accessToken');
+                                    print('Access token $accessToken');
 
-                                  if (kDebugMode) {
-                                    print("On success");
-                                  }
-                                  if (!mounted) return;
+                                    if (kDebugMode) {
+                                      print("On success");
+                                    }
+                                    if (!mounted) return;
 
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (_) => const HomePage(),
-                                  ));
-                                },
-                                onExit: (error) {
-                                  if (kDebugMode) {
-                                    print("On exit");
-                                  }
-                                },
-                                onInstitutionSelected:
-                                    (String institutionId, callBack) async {
-                                  String linkToken = await API.createLinkToken(
-                                    institutionId: institutionId,
-                                    userId: "138239374",
-                                    clientSecret: clientSecret,
-                                  );
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (_) => const HomePage(),
+                                    ));
+                                  },
+                                  onExit: (error, metadata) {
+                                    if (kDebugMode) {
+                                      print("On exit");
+                                    }
+                                  },
+                                  onInstitutionSelected:
+                                      (String institutionId, callBack) async {
+                                    String linkToken =
+                                        await API.createLinkToken(
+                                      institutionId: institutionId,
+                                      userId: "138239374",
+                                      clientSecret: clientSecret,
+                                    );
 
-                                  print('Link token $linkToken');
+                                    print('Link token $linkToken');
 
-                                  callBack(linkToken);
-                                },
-                              );
+                                    callBack(linkToken);
+                                  },
+                                );
 
-                              fuseConnect.open(clientSecret);
+                                fuseConnect.open(clientSecret);
+                              } catch (e) {
+                                print(e);
+                              }
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
